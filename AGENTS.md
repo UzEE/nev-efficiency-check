@@ -1,4 +1,5 @@
 # AGENT GUIDANCE
+
 1. Use Bun (latest) for everything: `bun install`, `bun run dev`, `bun run build`.
 2. Tailwind/shadcn setup: run `npx tailwindcss init -p` and `bunx shadcn-ui init` before scaffolding UI components.
 3. Run lint via `bun run lint`; format with Prettier config defaults (2-space, semicolons, single quotes where possible).

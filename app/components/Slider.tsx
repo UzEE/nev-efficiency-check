@@ -1,12 +1,12 @@
-import { DISTANCE_SLIDER } from 'app/lib/constants'
-import { formatDistance } from 'app/lib/utils'
+import { DISTANCE_SLIDER } from 'app/lib/constants';
+import { formatDistance } from 'app/lib/utils';
 
-import { Slider as SliderPrimitive } from './ui/slider'
+import { Slider as SliderPrimitive } from './ui/slider';
 
 type DistanceSliderProps = {
-  value: number
-  onChange: (value: number) => void
-}
+  value: number;
+  onChange: (value: number) => void;
+};
 
 export function DistanceSlider({ value, onChange }: DistanceSliderProps) {
   return (
@@ -31,5 +31,5 @@ export function DistanceSlider({ value, onChange }: DistanceSliderProps) {
         <span>{formatDistance(DISTANCE_SLIDER.max)}</span>
       </div>
     </div>
-  )
+  );
 }

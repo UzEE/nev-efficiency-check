@@ -3,14 +3,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  createRootRoute,
-} from '@tanstack/react-router'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+  createRootRoute
+} from '@tanstack/react-router';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 
-import { Footer } from '../components/Footer'
-import { Header } from '../components/Header'
-import globalStyles from '../styles/globals.css?url'
+import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
+import globalStyles from '../styles/globals.css?url';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,27 +18,27 @@ export const Route = createRootRoute({
       { charSet: 'utf-8' },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        content: 'width=device-width, initial-scale=1'
       },
       {
-        title: 'NEV Efficiency Check',
+        title: 'NEV Efficiency Check'
       },
       {
         name: 'description',
         content:
-          'Interactive Total Cost of Ownership simulator for ICE, HEV, PHEV, and BEV drivetrains in Pakistan.',
-      },
+          'Interactive Total Cost of Ownership simulator for ICE, HEV, PHEV, and BEV drivetrains in Pakistan.'
+      }
     ],
     links: [
       {
         rel: 'stylesheet',
-        href: globalStyles,
-      },
-    ],
+        href: globalStyles
+      }
+    ]
   }),
   component: RootDocument,
-  notFoundComponent: NotFound,
-})
+  notFoundComponent: NotFound
+});
 
 function RootDocument() {
   return (
@@ -57,27 +57,27 @@ function RootDocument() {
         <Devtools />
       </body>
     </html>
-  )
+  );
 }
 
 function Devtools() {
   if (!import.meta.env.DEV) {
-    return null
+    return null;
   }
 
   return (
     <TanStackDevtools
       config={{
-        position: 'bottom-left',
+        position: 'bottom-left'
       }}
       plugins={[
         {
           name: 'TanStack Router',
-          render: <TanStackRouterDevtoolsPanel />,
-        },
+          render: <TanStackRouterDevtoolsPanel />
+        }
       ]}
     />
-  )
+  );
 }
 
 function NotFound() {
@@ -92,5 +92,5 @@ function NotFound() {
         </p>
       </div>
     </div>
-  )
+  );
 }

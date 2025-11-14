@@ -13,16 +13,16 @@ The dev server runs on Vite with TanStack Start SSR. Use `bun run build` to prod
 
 ## Scripts
 
-| Script | Purpose |
-| --- | --- |
-| `bun run dev` | Start Vite + TanStack Start in development mode |
-| `bun run build` | Build client + server bundles |
-| `bun run preview` | Preview the production build via Vite |
-| `bun run start` | Serve the built app with the Bun production server (`server.ts`) |
-| `bun run lint` | Run ESLint using the shared TanStack config |
-| `bun run format` | Check formatting with Prettier (`bun run format:write` to fix) |
-| `bun run typecheck` | Run `tsc --noEmit` |
-| `bun test` | Placeholder for future Bun-based tests |
+| Script              | Purpose                                                          |
+| ------------------- | ---------------------------------------------------------------- |
+| `bun run dev`       | Start Vite + TanStack Start in development mode                  |
+| `bun run build`     | Build client + server bundles                                    |
+| `bun run preview`   | Preview the production build via Vite                            |
+| `bun run start`     | Serve the built app with the Bun production server (`server.ts`) |
+| `bun run lint`      | Run ESLint using the shared TanStack config                      |
+| `bun run format`    | Check formatting with Prettier (`bun run format:write` to fix)   |
+| `bun run typecheck` | Run `tsc --noEmit`                                               |
+| `bun test`          | Placeholder for future Bun-based tests                           |
 
 ## Architecture Highlights
 

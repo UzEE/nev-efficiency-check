@@ -1,22 +1,15 @@
-import { DRIVE_PROFILES } from 'app/lib/constants'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select'
+import { DRIVE_PROFILES } from 'app/lib/constants';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
- type DriveProfileKey = keyof typeof DRIVE_PROFILES
+type DriveProfileKey = keyof typeof DRIVE_PROFILES;
 
- type DriveProfileSelectorProps = {
-  value: DriveProfileKey
-  onChange: (profile: DriveProfileKey) => void
-}
+type DriveProfileSelectorProps = {
+  value: DriveProfileKey;
+  onChange: (profile: DriveProfileKey) => void;
+};
 
- export function DriveProfileSelector({ value, onChange }: DriveProfileSelectorProps) {
-  const selectedLabel = DRIVE_PROFILES[value].label
-
+export function DriveProfileSelector({ value, onChange }: DriveProfileSelectorProps) {
+  const selectedLabel = DRIVE_PROFILES[value].label;
 
   return (
     <div className="space-y-2">
@@ -40,5 +33,5 @@ import {
         </SelectContent>
       </Select>
     </div>
-  )
+  );
 }

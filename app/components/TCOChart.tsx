@@ -1,35 +1,35 @@
-import { animated, useSpring } from '@react-spring/web'
+import { animated, useSpring } from '@react-spring/web';
 
-import { AxisBottom, AxisLeft } from '@visx/axis'
-import { GridRows } from '@visx/grid'
-import { Group } from '@visx/group'
-import { ParentSize } from '@visx/responsive'
-import { scaleLinear } from '@visx/scale'
-import { LinePath } from '@visx/shape'
-import * as React from 'react'
+import { AxisBottom, AxisLeft } from '@visx/axis';
+import { GridRows } from '@visx/grid';
+import { Group } from '@visx/group';
+import { ParentSize } from '@visx/responsive';
+import { scaleLinear } from '@visx/scale';
+import { LinePath } from '@visx/shape';
+import * as React from 'react';
 
-import { DISTANCE_SLIDER, DRIVE_PROFILES } from 'app/lib/constants'
-import { calculateTco } from 'app/lib/tco'
-import { cn, formatCurrency } from 'app/lib/utils'
-import type { DriveProfileKey, VehicleKey } from 'app/lib/constants'
-import type { TcoSeries } from 'app/lib/tco'
+import { DISTANCE_SLIDER, DRIVE_PROFILES } from 'app/lib/constants';
+import { calculateTco } from 'app/lib/tco';
+import { cn, formatCurrency } from 'app/lib/utils';
+import type { DriveProfileKey, VehicleKey } from 'app/lib/constants';
+import type { TcoSeries } from 'app/lib/tco';
 
 type LegendItem = {
-  vehicle: VehicleKey
-  label: string
-  color: string
-}
+  vehicle: VehicleKey;
+  label: string;
+  color: string;
+};
 
 type TCOChartProps = {
-  series: Array<TcoSeries>
-  selectedDistance: number
-  driveProfile: DriveProfileKey
-  legendItems: Array<LegendItem>
-  activeVehicles: Array<VehicleKey>
-  onToggleVehicle: (vehicle: VehicleKey) => void
-}
+  series: Array<TcoSeries>;
+  selectedDistance: number;
+  driveProfile: DriveProfileKey;
+  legendItems: Array<LegendItem>;
+  activeVehicles: Array<VehicleKey>;
+  onToggleVehicle: (vehicle: VehicleKey) => void;
+};
 
-const margins = { top: 20, right: 20, bottom: 40, left: 110 }
+const margins = { top: 20, right: 20, bottom: 40, left: 110 };
 
 export function TCOChart({
   series,
@@ -37,10 +37,10 @@ export function TCOChart({
   driveProfile,
   legendItems,
   activeVehicles,
-  onToggleVehicle,
+  onToggleVehicle
 }: TCOChartProps) {
-  const profileCopy = DRIVE_PROFILES[driveProfile]
-  const isClient = typeof window !== 'undefined'
+  const profileCopy = DRIVE_PROFILES[driveProfile];
+  const isClient = typeof window !== 'undefined';
 
   return (
     <section
@@ -78,7 +78,7 @@ export function TCOChart({
         </div>
         <div className="flex w-full flex-col gap-3 text-sm text-slate-200 lg:w-64 lg:pl-6">
           {legendItems.map((item) => {
-            const isActive = activeVehicles.includes(item.vehicle)
+            const isActive = activeVehicles.includes(item.vehicle);
             return (
               <button
                 key={item.vehicle}
@@ -89,7 +89,7 @@ export function TCOChart({
                   'flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
                   isActive
                     ? 'border-white/70 bg-white/10 text-white'
-                    : 'border-white/10 bg-white/0 text-slate-400 hover:border-white/30 hover:text-white',
+                    : 'border-white/10 bg-white/0 text-slate-400 hover:border-white/30 hover:text-white'
                 )}
               >
                 <span className="flex flex-1 flex-col">
@@ -101,70 +101,70 @@ export function TCOChart({
                   aria-hidden="true"
                 />
               </button>
-            )
+            );
           })}
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-const AnimatedGroup = animated(Group)
+const AnimatedGroup = animated(Group);
 
 type ChartCanvasProps = {
-  width: number
-  height: number
-  series: Array<TcoSeries>
-  selectedDistance: number
-  driveProfile: DriveProfileKey
-}
+  width: number;
+  height: number;
+  series: Array<TcoSeries>;
+  selectedDistance: number;
+  driveProfile: DriveProfileKey;
+};
 
 function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: ChartCanvasProps) {
-  const innerWidth = Math.max(width - margins.left - margins.right, 0)
-  const innerHeight = Math.max(height - margins.top - margins.bottom, 0)
+  const innerWidth = Math.max(width - margins.left - margins.right, 0);
+  const innerHeight = Math.max(height - margins.top - margins.bottom, 0);
 
   const { yMin, yMax } = React.useMemo(() => {
     if (series.length === 0) {
-      return { yMin: 0, yMax: 1 }
+      return { yMin: 0, yMax: 1 };
     }
 
-    let min = Number.POSITIVE_INFINITY
-    let max = Number.NEGATIVE_INFINITY
+    let min = Number.POSITIVE_INFINITY;
+    let max = Number.NEGATIVE_INFINITY;
 
     series.forEach((item) => {
       item.points.forEach((point) => {
-        min = Math.min(min, point.value)
-        max = Math.max(max, point.value)
-      })
-    })
+        min = Math.min(min, point.value);
+        max = Math.max(max, point.value);
+      });
+    });
 
     if (!Number.isFinite(min) || !Number.isFinite(max)) {
-      return { yMin: 0, yMax: 1 }
+      return { yMin: 0, yMax: 1 };
     }
 
-    const paddedMin = Math.max(min * 0.75, 0)
-    const paddedMax = Math.max(max * 1.25, paddedMin + Math.max(max - min, 1))
+    const paddedMin = Math.max(min * 0.75, 0);
+    const paddedMax = Math.max(max * 1.25, paddedMin + Math.max(max - min, 1));
 
-    return { yMin: paddedMin, yMax: paddedMax }
-  }, [series])
+    return { yMin: paddedMin, yMax: paddedMax };
+  }, [series]);
 
   const xScale = React.useMemo(
     () =>
       scaleLinear<number>({
         domain: [DISTANCE_SLIDER.min, DISTANCE_SLIDER.max],
-        range: [0, innerWidth],
+        range: [0, innerWidth]
       }),
-    [innerWidth],
-  )
+    [innerWidth]
+  );
 
   const yScale = React.useMemo(
     () =>
       scaleLinear<number>({
         domain: [yMin, yMax],
-        range: [innerHeight, 0],
+        range: [innerHeight, 0]
       }),
-    [innerHeight, yMin, yMax],
-  )
+    [innerHeight, yMin, yMax]
+  );
 
   const markerPoints = React.useMemo(
     () =>
@@ -173,23 +173,28 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
         color: item.color,
         label: item.label,
         distance: selectedDistance,
-        value: calculateTco(item.vehicle, selectedDistance, driveProfile),
+        value: calculateTco(item.vehicle, selectedDistance, driveProfile)
       })),
-    [driveProfile, selectedDistance, series],
-  )
+    [driveProfile, selectedDistance, series]
+  );
 
-  const [fadeIn, api] = useSpring(() => ({ opacity: 1 }))
+  const [fadeIn, api] = useSpring(() => ({ opacity: 1 }));
 
   React.useEffect(() => {
     api.start({
       from: { opacity: 0 },
       to: { opacity: 1 },
-      config: { tension: 170, friction: 26 },
-    })
-  }, [api, driveProfile, selectedDistance, series])
+      config: { tension: 170, friction: 26 }
+    });
+  }, [api, driveProfile, selectedDistance, series]);
 
   return (
-    <svg role="img" width={width} height={height} aria-label="Animated total cost of ownership chart">
+    <svg
+      role="img"
+      width={width}
+      height={height}
+      aria-label="Animated total cost of ownership chart"
+    >
       <g transform={`translate(${margins.left}, ${margins.top})`}>
         <GridRows
           scale={yScale}
@@ -208,7 +213,7 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
             fill: '#94a3b8',
             fontSize: 12,
             dx: '-0.75em',
-            textAnchor: 'end',
+            textAnchor: 'end'
           })}
         />
         <AxisBottom
@@ -221,7 +226,7 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
           tickLabelProps={() => ({
             fill: '#94a3b8',
             fontSize: 12,
-            dy: '1.5em',
+            dy: '1.5em'
           })}
         />
         {series.map((item) => (
@@ -261,5 +266,5 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
         ))}
       </g>
     </svg>
-  )
+  );
 }
