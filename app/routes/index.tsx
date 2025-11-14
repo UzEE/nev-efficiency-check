@@ -187,7 +187,7 @@ function IndexPage() {
 
   return (
     <main className="flex flex-1 flex-col gap-8 px-6 py-10">
-      <section className="mx-auto w-full max-w-6xl space-y-5 text-center">
+      <section className="mx-auto w-full max-w-7xl space-y-5 text-center">
         <p className="text-sm uppercase tracking-widest text-primary">Simulator</p>
         <h1 className="text-5xl font-semibold text-white">Total Cost of Ownership</h1>
         <p className="text-base text-slate-300">
@@ -196,12 +196,12 @@ function IndexPage() {
         </p>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur md:grid-cols-2">
+      <section className="mx-auto grid w-full max-w-7xl gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur md:grid-cols-2">
         <DistanceSlider value={distance} onChange={handleDistanceChange} />
         <DriveProfileSelector value={profile} onChange={handleProfileChange} />
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-4 md:grid-cols-4">
+      <section className="mx-auto grid w-full max-w-7xl gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {visibleSummaries.length === 0 ? (
           <div className="col-span-full rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-sm text-slate-300">
             Select at least one vehicle in the legend to compare costs.
@@ -226,7 +226,7 @@ function IndexPage() {
         )}
       </section>
 
-      <section className="mx-auto w-full max-w-6xl">
+      <section className="mx-auto w-full max-w-7xl">
         <TCOChart
           series={visibleSeries}
           selectedDistance={distance}
@@ -237,7 +237,7 @@ function IndexPage() {
         />
       </section>
 
-      <section className="mx-auto w-full max-w-6xl space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6">
+      <section className="mx-auto w-full max-w-7xl space-y-6 rounded-3xl border border-white/10 bg-white/5 p-6">
         <div className="space-y-3">
           <p className="text-xs uppercase tracking-wide text-primary/80">Fuel & energy inputs</p>
           <h2 className="text-2xl font-semibold text-white">Operating cost assumptions</h2>
@@ -281,7 +281,7 @@ function IndexPage() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl rounded-3xl border border-white/10 bg-white/5 p-6 text-xs text-slate-400">
+      <section className="mx-auto w-full max-w-7xl rounded-3xl border border-white/10 bg-white/5 p-6 text-xs text-slate-400">
         <p>
           Rates exclude financing, taxation, depreciation, and maintenance escalations. Charging mixes assume 80% home
           charging with the remaining 20% delivered by mid-trip commercial DC fast chargers. Always validate live fuel

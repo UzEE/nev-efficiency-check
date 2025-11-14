@@ -53,7 +53,30 @@ export function TCOChart({
           <h2 className="text-2xl font-semibold">{profileCopy.label} profile</h2>
           <p className="text-sm text-slate-400">{profileCopy.description}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 text-xs">
+      </div>
+      <div className="mt-6 flex flex-col gap-6 lg:flex-row">
+        <div className="h-[420px] w-full flex-1">
+          {series.length === 0 ? (
+            <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-white/15 text-sm text-slate-400">
+              Enable at least one vehicle to render the chart.
+            </div>
+          ) : isClient ? (
+            <ParentSize>
+              {({ width, height }) => (
+                <ChartCanvas
+                  width={width}
+                  height={height}
+                  series={series}
+                  selectedDistance={selectedDistance}
+                  driveProfile={driveProfile}
+                />
+              )}
+            </ParentSize>
+          ) : (
+            <div className="h-full w-full animate-pulse rounded-2xl bg-white/5" aria-hidden />
+          )}
+        </div>
+        <div className="flex w-full flex-col gap-3 text-sm text-slate-200 lg:w-64 lg:pl-6">
           {legendItems.map((item) => {
             const isActive = activeVehicles.includes(item.vehicle)
             return (
@@ -63,43 +86,24 @@ export function TCOChart({
                 onClick={() => onToggleVehicle(item.vehicle)}
                 aria-pressed={isActive}
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                  'flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
                   isActive
                     ? 'border-white/70 bg-white/10 text-white'
                     : 'border-white/10 bg-white/0 text-slate-400 hover:border-white/30 hover:text-white',
                 )}
               >
+                <span className="flex flex-1 flex-col">
+                  <span className="text-sm font-medium leading-tight">{item.label}</span>
+                </span>
                 <span
-                  className="h-2 w-8 rounded-full"
+                  className="ml-3 h-3 w-12 rounded-full"
                   style={{ backgroundColor: item.color, opacity: isActive ? 1 : 0.3 }}
                   aria-hidden="true"
                 />
-                {item.label}
               </button>
             )
           })}
         </div>
-      </div>
-      <div className="mt-6 h-[420px] w-full">
-        {series.length === 0 ? (
-          <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-white/15 text-sm text-slate-400">
-            Enable at least one vehicle to render the chart.
-          </div>
-        ) : isClient ? (
-          <ParentSize>
-            {({ width, height }) => (
-              <ChartCanvas
-                width={width}
-                height={height}
-                series={series}
-                selectedDistance={selectedDistance}
-                driveProfile={driveProfile}
-              />
-            )}
-          </ParentSize>
-        ) : (
-          <div className="h-full w-full animate-pulse rounded-2xl bg-white/5" aria-hidden />
-        )}
       </div>
     </section>
   )

@@ -13,9 +13,15 @@ export const VEHICLE_TYPES = {
   },
   phev: {
     key: 'phev',
-    label: 'PHEV (Lazy Mode)',
+    label: 'H6 PHEV (Lazy)',
     upfrontPrice: 13_619_952,
     color: '#c084fc',
+  },
+  phevDiligent: {
+    key: 'phevDiligent',
+    label: 'H6 PHEV (Diligent – all city EV)',
+    upfrontPrice: 13_619_952,
+    color: '#f472b6',
   },
   bev: {
     key: 'bev',
@@ -60,6 +66,18 @@ export const VEHICLE_EFFICIENCY: Record<VehicleKey, Array<EfficiencyEntry>> = {
       unit: 'km/kWh',
     },
   ],
+  phevDiligent: [
+    {
+      label: 'City EV mode',
+      value: 6.4,
+      unit: 'km/kWh',
+    },
+    {
+      label: 'Highway hybrid assist',
+      value: 13.33,
+      unit: 'km/L',
+    },
+  ],
   bev: [
     {
       label: 'Battery-only',
@@ -70,9 +88,9 @@ export const VEHICLE_EFFICIENCY: Record<VehicleKey, Array<EfficiencyEntry>> = {
 }
 
 export const ENERGY_INPUTS = {
-  petrolPricePerLitre: 305,
-  homeElectricityPerKwh: 45,
-  fastChargePerKwh: 120,
+  petrolPricePerLitre: 265,
+  homeElectricityPerKwh: 20,
+  fastChargePerKwh: 80,
   homeChargingShare: 0.8,
   fastChargingShare: 0.2,
 } as const
@@ -86,6 +104,7 @@ export const DRIVE_PROFILES = {
       ice: 24.99,
       hev: 15.9,
       phev: 12.51,
+      phevDiligent: 6.96,
       bev: 5.09,
     },
   },
@@ -97,6 +116,7 @@ export const DRIVE_PROFILES = {
       ice: 24.61,
       hev: 16.09,
       phev: 12.82,
+      phevDiligent: 7.62,
       bev: 5.55,
     },
   },
@@ -108,6 +128,7 @@ export const DRIVE_PROFILES = {
       ice: 23.98,
       hev: 16.4,
       phev: 13.34,
+      phevDiligent: 8.67,
       bev: 6.32,
     },
   },
