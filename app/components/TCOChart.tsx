@@ -1,4 +1,5 @@
 import { animated, useSpring } from '@react-spring/web'
+
 import { AxisBottom, AxisLeft } from '@visx/axis'
 import { GridRows } from '@visx/grid'
 import { Group } from '@visx/group'
@@ -9,23 +10,37 @@ import * as React from 'react'
 
 import { DISTANCE_SLIDER, DRIVE_PROFILES } from 'app/lib/constants'
 import { calculateTco } from 'app/lib/tco'
-import { formatCurrency } from 'app/lib/utils'
-import type { DriveProfileKey } from 'app/lib/constants'
+import { cn, formatCurrency } from 'app/lib/utils'
+import type { DriveProfileKey, VehicleKey } from 'app/lib/constants'
 import type { TcoSeries } from 'app/lib/tco'
+
+type LegendItem = {
+  vehicle: VehicleKey
+  label: string
+  color: string
+}
 
 type TCOChartProps = {
   series: Array<TcoSeries>
   selectedDistance: number
   driveProfile: DriveProfileKey
+  legendItems: Array<LegendItem>
+  activeVehicles: Array<VehicleKey>
+  onToggleVehicle: (vehicle: VehicleKey) => void
 }
 
-const margins = { top: 20, right: 20, bottom: 40, left: 80 }
+const margins = { top: 20, right: 20, bottom: 40, left: 110 }
 
-export function TCOChart({ series, selectedDistance, driveProfile }: TCOChartProps) {
+export function TCOChart({
+  series,
+  selectedDistance,
+  driveProfile,
+  legendItems,
+  activeVehicles,
+  onToggleVehicle,
+}: TCOChartProps) {
   const profileCopy = DRIVE_PROFILES[driveProfile]
-
-  const [isClient, setIsClient] = React.useState(false)
-  React.useEffect(() => setIsClient(true), [])
+  const isClient = typeof window !== 'undefined'
 
   return (
     <section
@@ -38,21 +53,39 @@ export function TCOChart({ series, selectedDistance, driveProfile }: TCOChartPro
           <h2 className="text-2xl font-semibold">{profileCopy.label} profile</h2>
           <p className="text-sm text-slate-400">{profileCopy.description}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-4 text-sm">
-          {series.map((item) => (
-            <span key={item.vehicle} className="flex items-center gap-2">
-              <span
-                className="h-2 w-8 rounded-full"
-                style={{ backgroundColor: item.color }}
-                aria-hidden="true"
-              />
-              {item.label}
-            </span>
-          ))}
+        <div className="flex flex-wrap items-center gap-3 text-xs">
+          {legendItems.map((item) => {
+            const isActive = activeVehicles.includes(item.vehicle)
+            return (
+              <button
+                key={item.vehicle}
+                type="button"
+                onClick={() => onToggleVehicle(item.vehicle)}
+                aria-pressed={isActive}
+                className={cn(
+                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                  isActive
+                    ? 'border-white/70 bg-white/10 text-white'
+                    : 'border-white/10 bg-white/0 text-slate-400 hover:border-white/30 hover:text-white',
+                )}
+              >
+                <span
+                  className="h-2 w-8 rounded-full"
+                  style={{ backgroundColor: item.color, opacity: isActive ? 1 : 0.3 }}
+                  aria-hidden="true"
+                />
+                {item.label}
+              </button>
+            )
+          })}
         </div>
       </div>
       <div className="mt-6 h-[420px] w-full">
-        {isClient ? (
+        {series.length === 0 ? (
+          <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-white/15 text-sm text-slate-400">
+            Enable at least one vehicle to render the chart.
+          </div>
+        ) : isClient ? (
           <ParentSize>
             {({ width, height }) => (
               <ChartCanvas
@@ -86,11 +119,29 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
   const innerWidth = Math.max(width - margins.left - margins.right, 0)
   const innerHeight = Math.max(height - margins.top - margins.bottom, 0)
 
-  const yMaxValue = React.useMemo(() => {
-    return series.reduce((acc, item) => {
-      const localMax = item.points.reduce((pointMax, point) => Math.max(pointMax, point.value), 0)
-      return Math.max(acc, localMax)
-    }, 0)
+  const { yMin, yMax } = React.useMemo(() => {
+    if (series.length === 0) {
+      return { yMin: 0, yMax: 1 }
+    }
+
+    let min = Number.POSITIVE_INFINITY
+    let max = Number.NEGATIVE_INFINITY
+
+    series.forEach((item) => {
+      item.points.forEach((point) => {
+        min = Math.min(min, point.value)
+        max = Math.max(max, point.value)
+      })
+    })
+
+    if (!Number.isFinite(min) || !Number.isFinite(max)) {
+      return { yMin: 0, yMax: 1 }
+    }
+
+    const paddedMin = Math.max(min * 0.75, 0)
+    const paddedMax = Math.max(max * 1.25, paddedMin + Math.max(max - min, 1))
+
+    return { yMin: paddedMin, yMax: paddedMax }
   }, [series])
 
   const xScale = React.useMemo(
@@ -105,10 +156,10 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
   const yScale = React.useMemo(
     () =>
       scaleLinear<number>({
-        domain: [0, yMaxValue * 1.05],
+        domain: [yMin, yMax],
         range: [innerHeight, 0],
       }),
-    [innerHeight, yMaxValue],
+    [innerHeight, yMin, yMax],
   )
 
   const markerPoints = React.useMemo(
@@ -123,7 +174,7 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
     [driveProfile, selectedDistance, series],
   )
 
-  const [fadeIn, api] = useSpring(() => ({ opacity: 0 }))
+  const [fadeIn, api] = useSpring(() => ({ opacity: 1 }))
 
   React.useEffect(() => {
     api.start({
@@ -131,7 +182,7 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
       to: { opacity: 1 },
       config: { tension: 170, friction: 26 },
     })
-  }, [api, driveProfile, selectedDistance])
+  }, [api, driveProfile, selectedDistance, series])
 
   return (
     <svg role="img" width={width} height={height} aria-label="Animated total cost of ownership chart">
@@ -152,7 +203,8 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
           tickLabelProps={() => ({
             fill: '#94a3b8',
             fontSize: 12,
-            dx: '-0.5em',
+            dx: '-0.75em',
+            textAnchor: 'end',
           })}
         />
         <AxisBottom
@@ -181,7 +233,6 @@ function ChartCanvas({ width, height, series, selectedDistance, driveProfile }: 
             />
           </AnimatedGroup>
         ))}
-        {/* Marker */}
         <line
           x1={xScale(selectedDistance)}
           x2={xScale(selectedDistance)}

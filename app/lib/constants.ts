@@ -27,6 +27,56 @@ export const VEHICLE_TYPES = {
 
 export type VehicleKey = keyof typeof VEHICLE_TYPES
 
+export type EfficiencyEntry = {
+  label: string
+  value: number
+  unit: string
+}
+
+export const VEHICLE_EFFICIENCY: Record<VehicleKey, Array<EfficiencyEntry>> = {
+  ice: [
+    {
+      label: 'Petrol cycle',
+      value: 12.3,
+      unit: 'km/L',
+    },
+  ],
+  hev: [
+    {
+      label: 'Petrol cycle',
+      value: 19.4,
+      unit: 'km/L',
+    },
+  ],
+  phev: [
+    {
+      label: 'Hybrid petrol assist',
+      value: 17.8,
+      unit: 'km/L',
+    },
+    {
+      label: 'Battery-only',
+      value: 6.4,
+      unit: 'km/kWh',
+    },
+  ],
+  bev: [
+    {
+      label: 'Battery-only',
+      value: 6.1,
+      unit: 'km/kWh',
+    },
+  ],
+}
+
+export const ENERGY_INPUTS = {
+  petrolPricePerLitre: 305,
+  homeElectricityPerKwh: 45,
+  fastChargePerKwh: 120,
+  homeChargingShare: 0.8,
+  fastChargingShare: 0.2,
+} as const
+
 export const DRIVE_PROFILES = {
   urban: {
     key: 'urban',

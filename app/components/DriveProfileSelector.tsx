@@ -6,14 +6,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select'
-import type { DriveProfileKey } from 'app/lib/constants'
 
-type DriveProfileSelectorProps = {
+ type DriveProfileKey = keyof typeof DRIVE_PROFILES
+
+ type DriveProfileSelectorProps = {
   value: DriveProfileKey
   onChange: (profile: DriveProfileKey) => void
 }
 
-export function DriveProfileSelector({ value, onChange }: DriveProfileSelectorProps) {
+ export function DriveProfileSelector({ value, onChange }: DriveProfileSelectorProps) {
+  const selectedLabel = DRIVE_PROFILES[value].label
+
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -24,11 +28,11 @@ export function DriveProfileSelector({ value, onChange }: DriveProfileSelectorPr
       </div>
       <Select value={value} onValueChange={(next) => onChange(next as DriveProfileKey)}>
         <SelectTrigger id="drive-profile">
-          <SelectValue placeholder="Select a profile" />
+          <SelectValue placeholder="Select a profile">{selectedLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent className="min-w-[16rem]">
           {Object.values(DRIVE_PROFILES).map((profile) => (
-            <SelectItem key={profile.key} value={profile.key}>
+            <SelectItem key={profile.key} value={profile.key} textValue={profile.label}>
               <span className="font-medium text-foreground">{profile.label}</span>
               <span className="text-xs text-muted-foreground">{profile.description}</span>
             </SelectItem>
